@@ -65,18 +65,14 @@ class UserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $attributes = $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'address' => 'required',
-        ]);
+        $request->validate(User::$rules);
 
-        $user = User::query()->create($attributes);
+        $user = User::query()->create($request->except('_token'));
 
         return redirect()
             ->route('show', $user->id)
             ->with('success', __('Success create new user :name', [
-                'name' => $user->name,
+                'name' => $user->customer_fullname,
             ]));
     }
 
@@ -85,19 +81,15 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id): RedirectResponse
     {
-        $attributes = $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'address' => 'required',
-        ]);
+        $attributes = $request->validate(User::$rules);
 
         if ($user = User::query()->find($id)) {
-            $user->fill($attributes)->save();
+            $user->fill($request->except(['_token', '_method']))->save();
 
             return redirect()
                 ->route('show', $user->id)
                 ->with('success', __('Success update a user :name', [
-                    'name' => $user->name
+                    'name' => $user->customer_fullname
                 ]));
         }
 

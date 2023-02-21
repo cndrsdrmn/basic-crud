@@ -13,9 +13,15 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->text('address')->nullable();
+
+            foreach (array_keys(trans('fields')) as $field) {
+                if (ensure_mandatory($field)) {
+                    $table->string($field);
+                } else {
+                    $table->text($field)->nullable();
+                }
+            }
+
             $table->timestamps();
         });
     }

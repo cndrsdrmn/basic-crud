@@ -1,7 +1,7 @@
 @extends('app')
 
 @section('content')
-    <h1>Data of Student <a class="btn btn-primary float-end my-3" href="{{ route('create') }}">Create</a></h1>
+    <h1>Data <a class="btn btn-primary float-end my-3" href="{{ route('create') }}">Create</a></h1>
 
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -14,9 +14,9 @@
         <thead>
         <tr>
             <th scope="col">#</th>
-            <th scope="col">First Name</th>
-            <th scope="col">Last Name</th>
-            <th scope="col">Address</th>
+            <th scope="col">No Identitas</th>
+            <th scope="col">Shortname</th>
+            <th scope="col">Alamat</th>
             <th scope="col">Action</th>
         </tr>
         </thead>
@@ -24,9 +24,9 @@
         @forelse($users as $key => $user)
             <tr>
                 <th scope="row">{{ ($users->currentpage()-1) * $users->perpage() + $key + 1 }}</th>
-                <td>{{ $user->first_name }}</td>
-                <td>{{ $user->last_name }}</td>
-                <td>{{ $user->address }}</td>
+                <td>{{ $user->no_identitas }}</td>
+                <td>{{ $user->shortname }}</td>
+                <td>{{ $user->alamat1 }}</td>
                 <td>
                     <form action="{{ route('destroy', $user->id) }}" method="POST">
                         @method('DELETE')

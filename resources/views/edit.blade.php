@@ -2,7 +2,7 @@
 
 @section('content')
     <h1>
-        Form Edit: <code>{{ $user->name }}</code>
+        Form Edit: <code>{{ $user->customer_fullname }}</code>
         <a href="{{ route('index') }}" class="btn btn-success float-end">Home</a>
     </h1>
 
@@ -10,33 +10,24 @@
         <form class="row g-3 mt-3" action="{{ route('update', $user->id) }}" method="POST">
             @method('PUT')
             @csrf
-            <div class="col-md-6">
-                <label for="first_name" class="form-label">First Name</label>
-                <input id="first_name" type="text" class="form-control" value="{{ $user->first_name }}" name="first_name">
-                @error('first_name')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
-            </div>
-            <div class="col-md-6">
-                <label for="last_name" class="form-label">Last Name</label>
-                <input id="last_name" type="text" class="form-control" value="{{ $user->last_name }}" name="last_name">
-                @error('last_name')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
-            </div>
-            <div class="col-12">
-                <label for="address" class="form-label">Address</label>
-                <textarea id="address" name="address" class="form-control">{{ $user->address }}</textarea>
-                @error('address')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
-            </div>
+
+            @foreach(trans('fields') as $field => $label)
+                <div class="col-md-6">
+                    <label for="{{ $field }}" class="form-label">{{ $label }}{{ ensure_mandatory($field) ? '*' : '' }}</label>
+                    <input id="{{ $field }}"
+                           type="text"
+                           class="form-control"
+                           {{ ensure_mandatory($field) ? 'required' : '' }}
+                           value="{{ $user->{$field} ?? $label }}"
+                           name="{{ $field }}">
+                    @error($field)
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+            @endforeach
+
             <div class="col-12">
                 <button type="submit" class="btn btn-primary">Save</button>
             </div>
